@@ -12,7 +12,7 @@
    </el-row>
    </el-header>
     <el-container>
-      <el-aside class="aside" width="200px">
+      <el-aside width="200px">
         <el-menu default-active="2-1" class="menu" :unique-opened="true" :router="true">
         <!-- 用户管理-->
           <el-submenu index="1">
@@ -92,27 +92,27 @@
 <script>
 export default {
   beforeCreate () {
-      const token = sessionStorage.getItem('token')
-      if (!token) {
-          this.$message.warning('请登录')
-          this.$router.push({name: 'login'})
-      }
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+      this.$message.warning('请登录')
+      this.$router.push({name: 'login'})
+    }
   },
   methods: {
-      handleLogout () {
-          sessionStorage.clear()
-          this.$router.push({name: 'login'})
-          this.$message.success('退出成功')
-      }
+    handleLogout () {
+      sessionStorage.clear()
+      this.$router.push({name: 'login'})
+      this.$message.success('退出成功')
+    }
   }
 }
 </script>
 
 <style>
-  .aside, .main{
+  .el-aside {
     height: 100%;
   }
-  .container {
+  .el-container {
       height: 100%;
   }
   .middle {
@@ -132,7 +132,7 @@ export default {
   }
 
   .el-aside {
-    background-color: #D3DCE6;
+    /* background-color: #D3DCE6; */
     color: #333;
     /* text-align: center; */
     line-height: 200px;
