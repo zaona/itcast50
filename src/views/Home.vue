@@ -1,15 +1,15 @@
 <template>
  <el-container>
    <el-header>
-    <el-row>
+     <el-row>
       <el-col :span="3">
-          <div class="grid-content bg-purple">
-              <img src="@/assets/logo.png" alt="">
-        </div>
-    </el-col>
-      <el-col :span="20"><div class="grid-content bg-purple-light middle">电商后台管理系统</div></el-col>
-      <el-col :span="1"><div class="grid-content bg-purple-light"><a href="#" class="logout" @click="handleLogout">退出</a></div></el-col>
-   </el-row>
+           <div class="grid-content bg-purple">
+               <img src="@/assets/logo.png" alt="">
+         </div>
+      </el-col>
+       <el-col :span="20"><div class="grid-content bg-purple-light middle">电商后台管理系统</div></el-col>
+       <el-col :span="1"><div class="grid-content bg-purple-light"><a href="#" class="logout" @click="handleLogout">退出</a></div></el-col>
+    </el-row>
    </el-header>
     <el-container>
       <el-aside width="200px">
@@ -74,17 +74,18 @@
           <el-submenu index="5">
             <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>數據統計</span>
+                <span>数据统计</span>
             </template>
           <el-menu-item index="5-1">
               <i class="el-icon-location"></i>
-            數據報表
+            数据报表
           </el-menu-item>
         </el-submenu>
-
         </el-menu>
-      </el-aside>
-      <el-main>Main</el-main>
+    </el-aside>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
     </el-container>
  </el-container>
  </template>
@@ -141,8 +142,8 @@ export default {
   .el-main {
     background-color: #E9EEF3;
     color: #333;
-    text-align: center;
-    line-height: 160px;
+    /* text-align: center; */
+    /* line-height: 160px; */
   }
 
 </style>
