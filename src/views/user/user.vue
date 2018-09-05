@@ -10,7 +10,7 @@
                 <el-input clearable v-model="serchValue" placeholder="请输入内容" style="width: 300px">
                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                 </el-input>
-                <el-button type="success" plain>成功按钮</el-button>
+                <el-button type="success" plain>添加用户</el-button>
             </el-col>
         </el-row>
         <!-- 搜索 -->
@@ -49,6 +49,7 @@
                 label="用户状态">
                 <template slot-scope="scope">
                   <el-switch
+                    @change="handleChange(scope.row)"
                     v-model="scope.row.mg_state"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
@@ -60,7 +61,7 @@
                 <template slot-scope="scope">
                   <el-button plain size="mini" type="primary" icon="el-icon-edit"></el-button>
                   <el-button plain size="mini" type="success" icon="el-icon-check"></el-button>
-                  <el-button plain size="mini" type="danger" icon="el-icon-delete"></el-button>
+                  <el-button plain size="mini" type="danger" icon="el-icon-delete" @click="handledelete(scope.row.id)"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -104,6 +105,7 @@ export default {
                 const { meta: { msg, status}} = response.data
           if (status === 200) {
             this.tableData = response.data.data.users
+            console.log(this.tableData)
             this.total = response.data.data.total
           } else {
             this.$message.error(msg)
@@ -128,6 +130,34 @@ export default {
       handleSearch () {
         //   alert(1)
           this.loadData()
+      },
+      handledelete (id) {
+         this.$confirm('确定删除该用户?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+        const response = await this.$http.delete(`users/${id}`)
+        const { meta: { msg, status} } = response.data
+        if (status === 200) {
+          this.$message.success(msg)
+          this.loadData()
+        }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })   
+        })
+      },
+      async handleChange (user) {
+        const response = await this.$http.put(`users/${user.id}/state/${user.mg_state}`)
+        const { meta: { status, msg } } = response.data
+        if( status === 200 ) {
+            this.$message.success(msg)
+        } else {
+            this.$message.error(msg)
+        }
       }
   }
 }
