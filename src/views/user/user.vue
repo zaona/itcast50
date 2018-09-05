@@ -10,7 +10,7 @@
                 <el-input clearable v-model="serchValue" placeholder="请输入内容" style="width: 300px">
                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                 </el-input>
-                <el-button type="success" plain>添加用户</el-button>
+                <el-button type="success" plain @click="addUserDialogFormVisible = true">添加用户</el-button>
             </el-col>
         </el-row>
         <!-- 搜索 -->
@@ -74,6 +74,31 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
         </el-pagination>
+        <!-- 添加用户 -->
+        <el-dialog title="添加用户"
+          @close="handleClose"
+          :visible.sync="addUserDialogFormVisible">
+            <el-form
+            label-width="100px"
+            :model="formData">
+                <el-form-item label="用户名">
+                <el-input v-model="formData.username" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                <el-input v-model="formData.password" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                <el-input v-model="formData.email" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                <el-input v-model="formData.mobile" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addUserDialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handleAdd">确 定</el-button>
+            </div>
+        </el-dialog>
    </el-card>
 </template>
 
@@ -86,7 +111,14 @@ export default {
       pagenum: 1,
       pagesize: 2,
       total: 0,
-      serchValue: ''
+      serchValue: '',
+      addUserDialogFormVisible: false,
+      formData: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      }
     }
   },
   created () {
@@ -100,12 +132,12 @@ export default {
           this.$http
             .get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.serchValue}`)
             .then((response)=>{
-                console.log(response)
+                // console.log(response)
                 this.loading = false
                 const { meta: { msg, status}} = response.data
           if (status === 200) {
             this.tableData = response.data.data.users
-            console.log(this.tableData)
+            // console.log(this.tableData)
             this.total = response.data.data.total
           } else {
             this.$message.error(msg)
@@ -127,11 +159,11 @@ export default {
         console.log(`当前页: ${val}`);
 
       },
-      handleSearch () {
+    handleSearch () {
         //   alert(1)
-          this.loadData()
-      },
-      handledelete (id) {
+        this.loadData()
+    },
+    handledelete (id) {
          this.$confirm('确定删除该用户?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -147,18 +179,36 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })   
-        })
-      },
-      async handleChange (user) {
-        const response = await this.$http.put(`users/${user.id}/state/${user.mg_state}`)
+        })   
+      })
+    },
+    async handleChange (user) {
+      const response = await this.$http.put(`users/${user.id}/state/${user.mg_state}`)
+      const { meta: { status, msg } } = response.data
+      if (status === 200) {
+        this.$message.success(msg)
+      } else {
+        this.$message.error(msg)
+      }
+    },
+    async handleAdd () {
+        //①发请求
+        const response = await this.$http.post('users',this.formData)
         const { meta: { status, msg } } = response.data
-        if( status === 200 ) {
-            this.$message.success(msg)
+        console.log(response)
+        if (status === 201) {
+          this.$message.success(msg)
+          this.loadData()
+          this.addUserDialogFormVisible = false;
         } else {
             this.$message.error(msg)
         }
-      }
+    },
+    handleClose () {
+        for (let key in this.formData) {
+            this.formData[key] = ''
+        }
+    }
   }
 }
 </script>
