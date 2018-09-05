@@ -7,8 +7,12 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/style.css'
 import http from '@/plugins/http.js'
+import moment from 'moment'
 Vue.config.productionTip = false
 
+Vue.filter('fmtData', (value,fmtstr) => {
+  return moment(value).format(fmtstr)
+})
 Vue.use(ElementUI)
 Vue.use(http)
 /* eslint-disable no-new */

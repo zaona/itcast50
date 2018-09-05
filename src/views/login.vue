@@ -5,9 +5,9 @@
             <el-input v-model="formData.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-            <el-input type="password" v-model="formData.password"></el-input>
+            <el-input type="password" v-model="formData.password" @keyup.enter.native="handleLogin"></el-input>
         </el-form-item>
-        <el-button type="primary" class="login-btn" @click="handleLogin">登录</el-button>
+        <el-button type="primary" class="login-btn" @click.prevent="handleLogin">登录</el-button>
         </el-form>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
       this.$http
         .post('login', this.formData)
         .then((result) => {
+          console.log(result)
           const data = result.data
           const {meta: {status, msg}} = data
           if (status === 200) {
