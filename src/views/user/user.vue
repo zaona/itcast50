@@ -59,7 +59,8 @@
             <el-table-column
                 label="操作">
                 <template slot-scope="scope">
-                  <el-button plain size="mini" type="primary" icon="el-icon-edit"></el-button>
+                  <el-button plain size="mini" type="primary" icon="el-icon-edit"
+                  @click="handleOpenEditDialog(scope.row)"></el-button>
                   <el-button plain size="mini" type="success" icon="el-icon-check"></el-button>
                   <el-button plain size="mini" type="danger" icon="el-icon-delete" @click="handledelete(scope.row.id)"></el-button>
                 </template>
@@ -80,11 +81,13 @@
           :visible.sync="addUserDialogFormVisible">
             <el-form
             label-width="100px"
-            :model="formData">
-                <el-form-item label="用户名">
+            :model="formData"
+            :rules="rules"
+            ref="formData">
+                <el-form-item label="用户名" prop="username">
                 <el-input v-model="formData.username" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
+                <el-form-item label="密码" prop="password">
                 <el-input v-model="formData.password" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
@@ -97,6 +100,30 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addUserDialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="handleAdd">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改用户信息 -->
+        <el-dialog title="修改用户"
+          @close="handleClose"
+          :visible.sync="editUserDialogFormVisible">
+            <el-form
+            label-width="100px"
+            :model="formData"
+            :rules="rules"
+            ref="formData">
+                <el-form-item label="用户名" prop="username">
+                <el-input v-model="formData.username" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                <el-input v-model="formData.email" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                <el-input v-model="formData.mobile" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addUserDialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handleEdit">确 定</el-button>
             </div>
         </el-dialog>
    </el-card>
@@ -113,12 +140,23 @@ export default {
       total: 0,
       serchValue: '',
       addUserDialogFormVisible: false,
+      editUserDialogFormVisible: false,
       formData: {
         username: '',
         password: '',
         email: '',
         mobile: ''
-      }
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+        ]
+      },
     }
   },
   created () {
@@ -192,6 +230,12 @@ export default {
       }
     },
     async handleAdd () {
+        this.$refs.form.validate((valid) => {
+          if (!valid) {
+            this.$message.warning('验证失败')
+            return
+          } 
+        });
         //①发请求
         const response = await this.$http.post('users',this.formData)
         const { meta: { status, msg } } = response.data
@@ -199,7 +243,7 @@ export default {
         if (status === 201) {
           this.$message.success(msg)
           this.loadData()
-          this.addUserDialogFormVisible = false;
+          this.addUserDialogFormVisible = false
         } else {
             this.$message.error(msg)
         }
@@ -207,6 +251,27 @@ export default {
     handleClose () {
         for (let key in this.formData) {
             this.formData[key] = ''
+        }
+    },
+    handleOpenEditDialog (user) {
+    this.editUserDialogFormVisible = true
+    this.formData.username = user.username
+    this.formData.email = user.email
+    this.formData.mobile = user.mobile
+    this.formData.id = user.id
+    },
+    async handleEdit () {
+        const response = await this.$http.put(`users/${this.formData.id}`, {
+          email:this.formData.email,
+          mobile:this.formData.mobile
+        })
+        const { meta: { msg, status } } = response.data
+        if (status === 200) {
+          this.editUserDialogFormVisible = false
+          this.loadData()
+          this.$message.success(msg)
+        } else {
+          this.$message.error(msg)
         }
     }
   }
