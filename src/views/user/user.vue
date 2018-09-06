@@ -61,7 +61,7 @@
                 <template slot-scope="scope">
                   <el-button plain size="mini" type="primary" icon="el-icon-edit"
                   @click="handleOpenEditDialog(scope.row)"></el-button>
-                  <el-button plain size="mini" type="success" icon="el-icon-check"></el-button>
+                  <el-button plain size="mini" type="success" icon="el-icon-check" @click=""></el-button>
                   <el-button plain size="mini" type="danger" icon="el-icon-delete" @click="handledelete(scope.row.id)"></el-button>
                 </template>
             </el-table-column>
@@ -126,6 +126,27 @@
                 <el-button type="primary" @click="handleEdit">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 分配角色 -->
+        <el-dialog title="分配角色"
+          @close="handleClose"
+          :visible.sync="setRoleDialogFormVisible">
+            <el-form
+            label-width="100px"
+            :model="formData"
+            :rules="rules"
+            ref="formData">
+                <el-form-item label="用户名" prop="username">
+                <el-input v-model="formData.username" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                <el-input v-model="formData.mobile" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addUserDialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handleEdit">确 定</el-button>
+            </div>
+        </el-dialog>
    </el-card>
 </template>
 
@@ -141,6 +162,7 @@ export default {
       serchValue: '',
       addUserDialogFormVisible: false,
       editUserDialogFormVisible: false,
+      setRoleDialogFormVisible:false,
       formData: {
         username: '',
         password: '',

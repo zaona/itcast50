@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/views/login'
 import Home from '@/views/Home'
 import User from '@/views/user/user'
+import Rights from '@/views/rights/Rights'
 Vue.use(Router)
 
 export default new Router({
@@ -15,7 +16,8 @@ export default new Router({
       children: [
         {
           name: 'user', path: '/user', component: User
-        }
+        },
+        { name: 'rights', path: '/rights', component: Rights}
       ]
     }
   ]
