@@ -61,7 +61,7 @@
                 <template slot-scope="scope">
                   <el-button plain size="mini" type="primary" icon="el-icon-edit"
                   @click="handleOpenEditDialog(scope.row)"></el-button>
-                  <el-button plain size="mini" type="success" icon="el-icon-check" @click=""></el-button>
+                  <el-button plain size="mini" type="success" icon="el-icon-check"></el-button>
                   <el-button plain size="mini" type="danger" icon="el-icon-delete" @click="handledelete(scope.row.id)"></el-button>
                 </template>
             </el-table-column>
@@ -187,8 +187,8 @@ export default {
   methods: {
         loadData () {
           this.loading = true
-          const token = sessionStorage.getItem('token')
-          this.$http.defaults.headers.common['Authorization'] = token
+          // const token = sessionStorage.getItem('token')
+          // this.$http.defaults.headers.common['Authorization'] = token
           this.$http
             .get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.serchValue}`)
             .then((response)=>{
@@ -300,9 +300,6 @@ export default {
 }
 </script>
 <style>
-.card {
-    height: 100%;
-}
 .details {
     padding: 10px;
 }

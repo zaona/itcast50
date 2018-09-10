@@ -46,7 +46,7 @@
           <i class="el-icon-location"></i>
           <span>商品管理</span>
         </template>
-                  <el-menu-item index="3-1">
+                  <el-menu-item index="/goodsadd">
               <i class="el-icon-menu"></i>
             商品列表
           </el-menu-item>
@@ -54,7 +54,7 @@
               <i class="el-icon-view"></i>
             分类參數
           </el-menu-item>
-           <el-menu-item index="3-1">
+           <el-menu-item index="/categories">
               <i class="el-icon-view"></i>
             商品分类
           </el-menu-item>

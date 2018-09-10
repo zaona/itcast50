@@ -4,6 +4,9 @@ import Login from '@/views/login'
 import Home from '@/views/Home'
 import User from '@/views/user/user'
 import Rights from '@/views/rights/Rights'
+import Categories from '@/views/goods/Categories'
+import Goods from '@/views/goods/goods'
+import GoodsAdd from '@/views/goods/goodsAdd'
 Vue.use(Router)
 
 export default new Router({
@@ -17,7 +20,10 @@ export default new Router({
         {
           name: 'user', path: '/user', component: User
         },
-        { name: 'rights', path: '/rights', component: Rights}
+        { name: 'rights', path: '/rights', component: Rights},
+        { name: 'categories', path: '/categories', component: Categories},
+        { naem: 'goods', path: '/goods', component: Goods},
+        { name: 'goodsadd', path:'/goodsadd', component:GoodsAdd}
       ]
     }
   ]
